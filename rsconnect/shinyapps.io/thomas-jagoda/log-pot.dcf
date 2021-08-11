@@ -1,0 +1,14 @@
+name: log-pot
+title: log-pot
+username:
+account: thomas-jagoda
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 4482279
+bundleId: 4913326
+url: https://thomas-jagoda.shinyapps.io/log-pot/
+when: 1628710829.3154
+lastSyncTime: 1628710829.3154
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: rasc.R
