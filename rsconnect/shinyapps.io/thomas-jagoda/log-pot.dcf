@@ -5,10 +5,10 @@ account: thomas-jagoda
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 4482279
-bundleId: 4913326
+bundleId: 4916960
 url: https://thomas-jagoda.shinyapps.io/log-pot/
-when: 1628710829.3154
-lastSyncTime: 1628710829.3154
+when: 1628796547.5266
+lastSyncTime: 1628796547.5266
 asMultiple: FALSE
 asStatic: FALSE
 ignoredFiles: rasc.R
