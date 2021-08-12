@@ -12,6 +12,8 @@ log_aprox <- function(taper_pct=50, pot=100, load_res=10) {
   #parallel_res + (1-taper)*pot
 }
 
+
+
 log_pot <- function(taper_pct = 50, pot=25, mid=0.15) {
   taper <- taper_pct/100
   b = (1/mid - 1)^2

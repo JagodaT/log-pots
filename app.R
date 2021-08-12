@@ -5,31 +5,42 @@ source("utils.R")
 
 
 ui <- fluidPage(
-
+    tags$head(
+        # Note the wrapping of the string in HTML()
+        tags$style(HTML("
+        #image > img {
+            display: block;
+            margin: 0 auto;
+            
+        }"))
+    ),
     
-    titlePanel("Log Pots Approximation Tool"),
 
+    titlePanel("Log Pots Approximation Tool"),
+    br(),
      
     sidebarLayout(
         sidebarPanel(
             radioButtons("taper", "Taper", choices = c("Log" = "log",
-                                                       "Reverse Log" = "antilog")),
+                                                       "Anti-Log" = "antilog")),
             textInput(inputId = "real_pot", label = "Log Pot (kohms)", 
                       value = "25"),
             textInput(inputId = "linear_pot", label = "Linear Pot (kohms)", 
                       value = "100"),
             actionButton("go", "GO"),
-            br(),
-            uiOutput("slider1")
+            br(), br(),
+            uiOutput("slider1"),
+            width=2
             
         ),
 
         
         
         mainPanel(
-            plotlyOutput("Plotly")
+                plotlyOutput("Plotly"),
+                br(),br(),
+                imageOutput("image")
             
-           
         )
     )
 )
@@ -49,9 +60,10 @@ server <- function(input, output) {
 
     
     observeEvent(input$go, {
+
         v$go_flag <- TRUE
-        v$real_pot <- as.double(input$real_pot)
-        v$pot <- as.double(input$linear_pot)
+        v$real_pot <- input$real_pot
+        v$pot <- input$linear_pot
         v$taper <- input$taper
 
         
@@ -62,33 +74,38 @@ server <- function(input, output) {
     output$Plotly <- renderPlotly({
 
         if (!(v$go_flag)) return()
-
         
+        validate(
+            need(!str_detect(v$real_pot, "\\D"), "only numbers!")
+        )
+        validate(
+            need(!str_detect(v$pot, "\\D"), "only numbers!")
+        )
+        
+
         if (v$taper =="antilog") {
         
             p1 <- df_plot_data %>%
-                mutate(Real = round(anti_log_pot(rotation, pot=v$real_pot),2),
+                mutate(Real = round(anti_log_pot(rotation, pot=as.double(v$real_pot)),1),
                        Approximation = round(anti_log_aprox(rotation,
-                                                      pot=v$pot, 
-                                                      load_res=load_resistor()),2)) %>%
+                                                      pot=as.double(v$pot), 
+                                                      load_res=load_resistor()),1)) %>%
                 pivot_longer(c(Real, Approximation), names_to = "potentiometer",
                              values_to = "resistance") %>%
                 ggplot(aes(rotation, resistance, colour=potentiometer)) + 
                 geom_line() + 
                 theme_minimal() +
-                labs(title= ' Real vs Approx. Anti-log', x="Rotation %", 
+                labs(title= ' Real vs Approx. Anti-Log', x="Rotation %", 
                      y="Resistance (kohms)") +
                 theme(legend.title = element_blank())
             
-        } 
-        
-        if (v$taper == "log") {
+        } else if (v$taper == "log") {
             
             p1 <- df_plot_data %>%
-                mutate(Real = round(log_pot(rotation, pot=v$real_pot),2),
+                mutate(Real = round(log_pot(rotation, pot=as.double(v$real_pot)),1),
                        Approximation = round(log_aprox(rotation,
-                                                            pot=v$pot, 
-                                                            load_res=load_resistor()),2)) %>%
+                                                            pot=as.double(v$pot), 
+                                                            load_res=load_resistor()),1)) %>%
                 pivot_longer(c(Real, Approximation), names_to = "potentiometer",
                              values_to = "resistance") %>%
                 ggplot(aes(rotation, resistance, colour=potentiometer)) + 
@@ -103,11 +120,45 @@ server <- function(input, output) {
     })
     
     
-    output$slider1 <- renderUI({
-        if (!is.null(v$pot)){
-            max_res <- v$pot
+    
+    
+    
+    output$image <- renderImage({
+        if (is.null(input$taper))       return()
+        
+        
+        
+        if (input$taper == "log") {
+            return(list(
+                src = "www/log.PNG",
+                contentType = "image/png",
+                width="60%",
+                alt = "log pot"
+            ))
+        } else if (input$taper == "antilog") {
+            return(list(
+                src = "www/anti-log.PNG",
+                width="60%",
+                filetype = "image/png",
+                alt = "anti-log pot"
+            ))
         }
+        
+    }, deleteFile = FALSE)
+    
+    
+    output$slider1 <- renderUI({
+        
+        validate(
+            need(!str_detect(v$pot, "\\D"), "only numbers!")
+        )
 
+        if (!is.null(v$pot)){
+            max_res <- as.double(v$pot)
+        }
+        
+
+        
         sliderInput("load_resistor",
                     "Loading Resistor (kohms)",
                     min = 0.1,
