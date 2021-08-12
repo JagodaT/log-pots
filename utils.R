@@ -5,7 +5,7 @@ anti_log_aprox <- function(taper_pct=50, pot=100, load_res=10) {
 
 
 
-log_res_divider <- function(taper_pct=50, pot=100, load_res=10) {
+log_aprox <- function(taper_pct=50, pot=100, load_res=10) {
   taper <- taper_pct/100
   parallel_res <- taper*pot*load_res/(taper*pot + load_res)
   pot*parallel_res/(parallel_res + (1-taper)*pot)
