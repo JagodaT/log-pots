@@ -6,7 +6,6 @@ source("utils.R")
 
 ui <- fluidPage(
     tags$head(
-        # Note the wrapping of the string in HTML()
         tags$style(HTML("
         #image > img {
             display: block;
@@ -30,7 +29,7 @@ ui <- fluidPage(
             actionButton("go", "GO"),
             br(), br(),
             uiOutput("slider1"),
-            width=2
+            width=3
             
         ),
 
@@ -49,7 +48,7 @@ ui <- fluidPage(
 server <- function(input, output) {
     
     
-    df_plot_data <- tibble(rotation=seq(0, 100, 0.1))
+    df_plot_data <- tibble(rotation=seq(0, 100, 0.01))
     max_res <- 50
     
     v <- reactiveValues(pot=25, real_pot=100, go_flag=FALSE, taper=NULL)

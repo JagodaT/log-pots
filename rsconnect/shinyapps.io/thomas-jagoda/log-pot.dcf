@@ -5,9 +5,9 @@ account: thomas-jagoda
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 4482279
-bundleId: 4917511
+bundleId: 4921316
 url: https://thomas-jagoda.shinyapps.io/log-pot/
-when: 1628808411.10717
-lastSyncTime: 1628808411.10717
+when: 1628892472.92172
+lastSyncTime: 1628892472.92172
 asMultiple: FALSE
 asStatic: FALSE
