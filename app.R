@@ -1,6 +1,6 @@
 suppressPackageStartupMessages(library(shiny))
 suppressPackageStartupMessages(library(tidyverse))
-suppressPackageStartupMessages(library(plotly))
+#suppressPackageStartupMessages(library(plotly))
 source("utils.R")
 
 
@@ -36,7 +36,7 @@ ui <- fluidPage(
         
         
         mainPanel(
-                plotlyOutput("Plotly"),
+                plotOutput("Plotly"),
                 br(),br(),
                 imageOutput("image")
             
@@ -70,7 +70,7 @@ server <- function(input, output) {
     
     
     
-    output$Plotly <- renderPlotly({
+    output$Plotly <- renderPlot({
 
         if (!(v$go_flag)) return()
         
@@ -115,7 +115,8 @@ server <- function(input, output) {
                 theme(legend.title = element_blank())
         }
         
-        ggplotly(p1) 
+        #ggplotly(p1) 
+        p1
     })
     
     
